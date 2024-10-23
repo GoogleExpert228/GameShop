@@ -10,8 +10,10 @@
     "seed": "tsx db/seeder.ts"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
+    "jose": "^5.9.6",
     "mongoose": "^8.7.1",
     "next": "^14.2.15",
     "react": "^18.3.1",

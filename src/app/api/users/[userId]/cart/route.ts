@@ -1,0 +1,60 @@
+// src/app/api/users/[userId]/cart/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import connect from '@/lib/mongoose';
+import User, { CartItem } from '@/models/User'; // Импортируем CartItem
+import mongoose from 'mongoose';
+
+export async function GET(request: NextRequest, { params }: { params: { userId: string } }) {
+    await connect();
+
+    const { userId } = params;
+
+    // Проверка на корректность ObjectId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
+    }
+
+    // Поиск пользователя по ID и получение его корзины
+    const user = await User.findById(userId).select('cart'); // Получаем только поле cart
+
+    if (!user) {
+        return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ cartItems: user.cart });
+}
+
+export async function POST(request: NextRequest, { params }: { params: { userId: string } }) {
+    await connect();
+
+    const { userId } = params;
+
+    // Проверка на корректность ObjectId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
+    }
+
+    const { productId, name, price, img, description, qty } = await request.json();
+
+    // Поиск пользователя по ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+        return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Указываем тип для переменной item
+    const existingCartItemIndex = user.cart.findIndex((item: CartItem) => item.product.toString() === productId);
+
+    if (existingCartItemIndex > -1) {
+        // Если товар уже есть в корзине, обновляем его количество
+        user.cart[existingCartItemIndex].qty += qty;
+    } else {
+        // Если товара нет в корзине, добавляем его
+        user.cart.push({ product: productId, name, price, img, description, qty });
+    }
+
+    await user.save(); // Сохраняем изменения в базе данных
+
+    return NextResponse.json({ message: 'Product added to cart successfully', cart: user.cart });
+}

@@ -15,6 +15,10 @@ export async function POST(request: NextRequest) {
 
     const { email, password, name, surname, address, birthdate } = await request.json();
 
+    if (!email || !password || !name || !surname || !address || !birthdate) {
+        NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
     // Проверка на существование пользователя с таким же email
     const existingUser = await User.findOne({ email });
     if (existingUser) {

@@ -2,9 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import connect from '@/lib/mongoose'; // Путь к вашему файлу подключения
 import User from '@/models/User'; // Импорт модели пользователя
 import bcrypt from 'bcryptjs'; // Библиотека для хэширования паролей
+import { getSession } from "@/lib/auth";
 
 export async function GET() {
     await connect();
+
+    const session  = await getSession();
+
+    if(!session) {
+        return NextResponse.json({error: "Unauthorized" }, { status: 401 });
+    }
+
+    if(session.userId !== "6720ff36f598890aa894fa5b") {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
 
     const users = await User.find({}, '-password'); // Исключаем поле пароля из ответа
     return NextResponse.json({ users });

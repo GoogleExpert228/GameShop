@@ -44,7 +44,16 @@ export async function POST(request: NextRequest, { params }: { params: { userId:
         return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
     }
 
-    const { productId, name, price, img, description, qty } = await request.json();
+    const { cartItem } = await request.json();
+    const { product, name, price, img, description, qty } = cartItem;
+
+    // Проверка, что все обязательные поля переданы
+    if (!product || !name || !price || !img || !description || !qty) {
+        return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    // Преобразуем product в ObjectId
+    const productId = new mongoose.Types.ObjectId(product);
 
     // Поиск пользователя по ID
     const user = await User.findById(userId);
@@ -53,8 +62,7 @@ export async function POST(request: NextRequest, { params }: { params: { userId:
         return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Указываем тип для переменной item
-    const existingCartItemIndex = user.cart.findIndex((item: CartItem) => item.product.toString() === productId);
+    const existingCartItemIndex = user.cart.findIndex((item: CartItem) => item.product.toString() === productId.toString());
 
     if (existingCartItemIndex > -1) {
         // Если товар уже есть в корзине, обновляем его количество

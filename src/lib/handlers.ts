@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import User from '@/models/User';
+import User, { Order, OrderItem } from '@/models/User';
 import { Types } from 'mongoose';
 import connect from '@/lib/mongoose';
 import Products from '@/models/Product';
@@ -90,5 +90,42 @@ export const getCartItems = async (userId: string) => {
     } catch (error) {
         console.error('Error fetching user:', error);
         throw new Error('Unable to fetch user');
+    }
+}
+
+export async function getOrder(userId: string, orderId: string): Promise<Order> {
+    try {
+        // Ищем пользователя по ID и извлекаем заказы
+        const user = await User.findById(userId).select('orders').exec();
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        // Находим заказ в массиве `orders`
+        const order = user.orders.find((order: Order) => order._id.toString() === orderId);
+
+        if (!order) {
+            throw new Error('Order not found');
+        }
+
+        return {
+            _id: order._id,
+            address: order.address,
+            date: order.date,
+            cardHolder: order.cardHolder,
+            cardNumber: order.cardNumber,
+            orderItems: order.orderItems.map((item: OrderItem) => ({
+                product: item.product,
+                name: item.name,
+                price: item.price,
+                img: item.img,
+                description: item.description,
+                qty: item.qty,
+            })),
+        };
+    } catch (error) {
+        console.error('Error fetching order:', error);
+        throw new Error('Unable to fetch order');
     }
 }

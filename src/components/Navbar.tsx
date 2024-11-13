@@ -21,7 +21,7 @@ export default async function Navbar() {
                             className="flex flex-shrink-0 items-center space-x-4 text-gray-300 hover:text-gray-100"
                         >
                             <img
-                                src="/img/logo.svg"
+                                src="https://cdn-icons-png.flaticon.com/128/3313/3313341.png"
                                 alt="GameShop logo"
                                 className="block h-8 w-auto"
                             />

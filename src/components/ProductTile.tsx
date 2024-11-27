@@ -13,7 +13,7 @@ export default function ProductTile( { product }: ProductTileProps) {
                 <img 
                     src={product.img} 
                     alt={product.name} 
-                    className='h-72 w-72 object-cover object-center group-hover:opacity-75' 
+                    className='w-full max-h-72 object-cover object-center group-hover:opacity-75' 
                 />
             </div>
             <h3 className='mt-4 text-sm text-gray-900'>{product.name}</h3>

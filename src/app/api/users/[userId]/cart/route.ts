@@ -44,6 +44,7 @@ export async function POST(request: NextRequest, { params }: { params: { userId:
         return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
     }
 
+    // Ожидаем, что в запросе будет один объект cartItem
     const { cartItem } = await request.json();
     const { product, name, price, img, description, qty } = cartItem;
 

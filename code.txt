@@ -1,0 +1,72 @@
+public class DatabaseConnection {
+    // Единственный экземпляр класса (синглтон)
+    private static DatabaseConnection instance;
+
+    // Поле для хранения активного соединения
+    private Connection connection;
+
+    // URL базы данных — настройте под свои параметры
+    private static final String DATABASE_URL = "jdbc:mysql://mysql-joh.alwaysdata.net:3306/joh_agenda";
+
+    // Закрытый конструктор, чтобы предотвратить создание экземпляра извне
+    private DatabaseConnection() {}
+
+    // Метод для получения единственного экземпляра класса
+    public static synchronized DatabaseConnection getInstance() {
+        if (instance == null) {
+            instance = new DatabaseConnection();
+        }
+        return instance;
+    }
+
+    /**
+     * Устанавливает соединение с базой данных, если оно еще не установлено.
+     *
+     * @param username имя пользователя для доступа к базе данных.
+     * @param password пароль для доступа к базе данных.
+     * @return установленное соединение или null, если подключение не удалось.
+     */
+    public Connection connect(String username, String password) {
+        if (connection == null) {
+            connection = initializeConnection(username, password);
+            if (connection != null) {
+                System.out.println("Соединение установлено.");
+            } else {
+                System.out.println("Не удалось установить соединение.");
+            }
+        }
+        return connection;
+    }
+
+    /*
+     * Создает подключение к базе данных.
+     *
+     * @param username имя пользователя для доступа к базе данных.
+     * @param password пароль для доступа к базе данных.
+     * @return объект Connection при успешном подключении или null при ошибке.
+     */
+    private Connection initializeConnection(String username, String password) {
+        try {
+            return DriverManager.getConnection(DATABASE_URL, username, password);
+        } catch (SQLException e) {
+            System.err.println("Ошибка подключения к базе данных: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Закрывает соединение с базой данных, если оно открыто.
+     */
+    public void closeConnection() {
+        if (connection != null) {
+            try {
+                connection.close();
+                System.out.println("Соединение закрыто.");
+            } catch (SQLException e) {
+                System.err.println("Ошибка при закрытии соединения: " + e.getMessage());
+            } finally {
+                connection = null;
+            }
+        }
+    }
+}

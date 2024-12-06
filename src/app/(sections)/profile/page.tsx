@@ -92,4 +92,6 @@ export default async function Profile() {
         console.error('Error fetching user:', error);
         notFound();
     }
+
+    //some comments
 }

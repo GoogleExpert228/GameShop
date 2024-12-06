@@ -1,7 +1,7 @@
-import { getSession } from '@/lib/auth'; // Пусть метод getSession остаётся без изменений
+import { getSession } from '@/lib/auth'; 
 import { notFound } from 'next/navigation';
 import { getUser } from '@/lib/handlers';
-import { Order, OrderItem } from '@/models/User'; // Импортируем тип Order (предполагаем, что он у вас есть)
+import { Order, OrderItem } from '@/models/User'; // Импортируем тип Order 
 
 export default async function Profile() {
     // Используем метод getSession для получения userId

@@ -3,6 +3,7 @@ import { CartItem } from "@/models/User";
 interface CartItemComponentProps {
     cartItem: CartItem;
 }
+
 export default function CartItemComponent({ cartItem }: CartItemComponentProps) {
     return(
         <div className="flex items-center justify-between mb-6 last:mb-0 rounded-lg shadow-sm bg-gray-100 p-4">

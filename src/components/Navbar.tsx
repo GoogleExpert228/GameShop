@@ -6,6 +6,7 @@ import {
 import NavbarButton from '@/components/Navbarbutton';
 import Link from 'next/link';
 import { getSession } from '@/lib/auth';
+import NavbarSignOutButton from './NavbarSignOutbutton';
 
 export default async function Navbar() {
     const session = await getSession();
@@ -45,13 +46,13 @@ export default async function Navbar() {
                                     <UserIcon className="h-6 w-6" aria-hidden="true" />
                                 </NavbarButton>
 
-                                <NavbarButton href="#">
+                                <NavbarSignOutButton>
                                     <span className="sr-only">Sign out</span>
                                     <ArrowRightStartOnRectangleIcon
                                         className="h-6 w-6"
                                         aria-hidden="true"
                                     />
-                                </NavbarButton>
+                                </NavbarSignOutButton>
                             </>
                         ) : (
                             <>

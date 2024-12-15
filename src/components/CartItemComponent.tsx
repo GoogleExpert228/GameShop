@@ -36,9 +36,10 @@ export default function CartItemComponent({ cartItem }: CartItemComponentProps) 
                 </div>
 
                 <CartItemCounter
-                    userId={userId.toString()}
-                    productId={cartItem.product._id.toString()}
-                    value={cartItem.qty}
+                userId= {userId}
+                productId={cartItem.product._id.toString()}
+                initialQty={3} // Текущее количество
+                initialPrice={cartItem.price} // Цена за единицу товара
                 />
             </div>
         </div>

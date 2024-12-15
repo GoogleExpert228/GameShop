@@ -36,36 +36,37 @@ export async function PUT(request: NextRequest, { params }: { params: { userId: 
 
     const { userId, productId } = params;
 
-    if(!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(productId)) {
-        return NextResponse.json({error: 'Invalid user ID or product ID'}, {status: 400});
+    if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(productId)) {
+        return NextResponse.json({ error: 'Invalid user ID or product ID' }, { status: 400 });
     }
 
-    const { qty } = await request.json();
+    const { qty, price } = await request.json();
 
-    if (qty <= 0) {
-        return NextResponse.json({ error: 'Quantity must be greater than zero' }, { status: 400 });
+    if (qty <= 0 || price < 0) {
+        return NextResponse.json({ error: 'Quantity must be greater than zero and price must be non-negative' }, { status: 400 });
     }
 
-    const user  = await User.findById(userId);
+    const user = await User.findById(userId);
 
-    if(!user) {
+    if (!user) {
         return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-     // Поиск товара в корзине
-     const existingCartItemIndex = user.cart.findIndex((item: CartItem) => item.product.toString() === productId);
+    // Поиск товара в корзине
+    const existingCartItemIndex = user.cart.findIndex((item: CartItem) => item.product.toString() === productId);
 
-     if (existingCartItemIndex === -1) {
-         return NextResponse.json({ error: 'Product not found in the cart' }, { status: 404 });
-     }
- 
-     // Обновление количества товара
-     user.cart[existingCartItemIndex].qty = qty;
- 
-     // Сохранение изменений
-     await user.save();
- 
-     return NextResponse.json({ message: 'Cart item updated successfully', cart: user.cart });
+    if (existingCartItemIndex === -1) {
+        return NextResponse.json({ error: 'Product not found in the cart' }, { status: 404 });
+    }
+
+    // Обновление количества и цены товара
+    user.cart[existingCartItemIndex].qty = qty;
+    user.cart[existingCartItemIndex].price = price;
+
+    // Сохранение изменений
+    await user.save();
+
+    return NextResponse.json({ message: 'Cart item updated successfully', cart: user.cart });
 }
 
 export async function DELETE(request: NextRequest, { params }: {params: {userId: string, productId: string} }) {

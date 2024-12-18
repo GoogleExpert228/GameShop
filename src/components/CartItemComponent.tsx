@@ -3,10 +3,10 @@ import CartItemCounter from "./CartItemCounter";
 
 interface CartItemComponentProps {
     cartItem: CartItem;
+    userId: string;
 }
 
-export default function CartItemComponent({ cartItem }: CartItemComponentProps) {
-    const userId = "671d735d5a34337e9a796832"; // Установка постоянного userId
+export default function CartItemComponent({ cartItem, userId }: CartItemComponentProps) {
 
     return (
         <div className="flex items-center justify-between mb-6 last:mb-0 rounded-lg shadow-sm bg-gray-100 p-4">
@@ -32,15 +32,10 @@ export default function CartItemComponent({ cartItem }: CartItemComponentProps) 
             {/* Цена и количество */}
             <div className="flex flex-col items-end">
                 <div className="text-xl font-semibold text-gray-800">
-                    ${cartItem.price}
+                    ${cartItem.price.toFixed(2)}
                 </div>
 
-                <CartItemCounter
-                userId= {userId}
-                productId={cartItem.product._id.toString()}
-                initialQty={3} // Текущее количество
-                initialPrice={cartItem.price} // Цена за единицу товара
-                />
+                <CartItemCounter productId={cartItem.product._id.toString()} userId={userId} />
             </div>
         </div>
     );

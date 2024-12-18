@@ -2,6 +2,7 @@ import { getSession } from '@/lib/auth';
 import { notFound } from 'next/navigation';
 import { getUser } from '@/lib/handlers';
 import { Order, OrderItem } from '@/models/User'; // Импортируем тип Order 
+import Link from 'next/link';
 
 export default async function Profile() {
     // Используем метод getSession для получения userId
@@ -74,9 +75,16 @@ export default async function Profile() {
                                             <td className="px-6 py-4 text-sm text-gray-800">{order.address}</td>
                                             <td className="px-6 py-4 text-sm text-gray-800">
                                                 <p>Card Holder: {order.cardHolder}</p>
-                                                <p>Card Number: {order.cardNumber.slice(-4)}</p> {/* Показываем последние 4 цифры */}
+                                                <p>Card Number: {order.cardNumber.slice(-4)}</p>
                                             </td>
-                                            <td className="px-6 py-4 text-sm text-gray-800"> ${calculateTotalPrice(order.orderItems).toFixed(2)}</td>
+                                            <td className="px-6 py-4 text-sm text-gray-800">
+                                                ${calculateTotalPrice(order.orderItems).toFixed(2)}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-gray-800">
+                                                <Link href={`/orders/${order._id}`} className="text-blue-500 hover:underline">
+                                                    Details
+                                                </Link>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>

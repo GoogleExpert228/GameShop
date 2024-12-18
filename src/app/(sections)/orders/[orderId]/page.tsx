@@ -47,8 +47,8 @@ export default async function OrderDetails({ params }: { params: { orderId: stri
                                 </div>
                             </div>
                             <div className="flex flex-col items-end">
-                                <span>{item.qty} × {item.price.toFixed(2)} €</span>
-                                <span className="text-gray-500">Total: {(item.qty * item.price).toFixed(2)} €</span>
+                                <span>{item.qty} × { (item.price / item.qty) } €</span>
+                                <span className="text-gray-500">Total: {(item.price).toFixed(2)} €</span>
                             </div>
                         </li>
                     ))}
@@ -61,7 +61,7 @@ export default async function OrderDetails({ params }: { params: { orderId: stri
                             <span className="font-medium">Subtotal:</span>
                             <span>
                                 {order.orderItems
-                                    .reduce((sum, item) => sum + item.qty * item.price, 0)
+                                    .reduce((sum, item) => sum + item.price, 0)
                                     .toFixed(2)}{' '} €
                             </span>
                         </div>
@@ -69,7 +69,7 @@ export default async function OrderDetails({ params }: { params: { orderId: stri
                             <span className="font-bold">Total:</span>
                             <span className="font-bold">
                                 {order.orderItems
-                                    .reduce((sum, item) => sum + item.qty * item.price, 0)
+                                    .reduce((sum, item) => sum + item.price, 0)
                                     .toFixed(2)}{' '} €
                             </span>
                         </div>
@@ -82,30 +82,3 @@ export default async function OrderDetails({ params }: { params: { orderId: stri
         notFound();
     }
 }
-
-/*
-{
-  "userId": "671d735d5a34337e9a796832",  // ID пользователя (можно получить из сессии или куки)
-  "address": "123 Main Street, Apt 4B",
-  "cardHolder": "John Doe",
-  "cardNumber": "1234567812345678",
-  "orderItems": [
-    {
-      "product": "670ce0ec7dae8b40b6dc377d",
-      "name":  "Game 1",
-      "price": 29.99,
-      "img": "https://store-images.s-microsoft.com/image/apps.808.14492077886571533.be42f4bd-887b-4430-8ed0-622341b4d2b0.c8274c53-105e-478b-9f4b-41b8088210a3?q=90&w=256&h=384&mode=crop&format=jpg&background=%23FFFFFF",
-      "description": "Exciting adventure game.",
-      "qty": 2
-    },
-    {
-      "product": "670ce0ec7dae8b40b6dc377e",  // ID продукта "Game 2"
-      "name": "Game 2",
-      "price": 49.99,
-      "img": "https://image.api.playstation.com/gs2-sec/appkgo/prod/CUSA08519_00/12/i_3da1cf7c41dc7652f9b639e1680d96436773658668c7dc3930c441291095713b/i/icon0.png",
-      "description": "A thrilling action game",
-      "qty": 1
-    }
-  ]
-}
-*/

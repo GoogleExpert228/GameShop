@@ -1,11 +1,13 @@
 import { Product } from "@/models/Product";
 import { Types } from "mongoose";
+import CartItemCounter from "./CartItemCounter";
 
 interface ProductDescriptionProps {
     product: Product & {_id: Types.ObjectId};
+    userId: string;
 }
 
-export default function ProductDescription ({product}: ProductDescriptionProps) {
+export default function ProductDescription ({product, userId}: ProductDescriptionProps) {
     return (
         <div className="flex flex-col px-4 sm:px-6 lg:px-8">
         <h3 className="pb-4 text-3xl font-bold text-gray-900 sm:pb-6 lg:pb-8">
@@ -23,6 +25,7 @@ export default function ProductDescription ({product}: ProductDescriptionProps) 
                 className="w-full h-80 mb-4 object-cover rounded" 
               />
               <p className="mt-2 text-3xl font-semibold">{product.price.toFixed(2)} €</p>
+               <CartItemCounter productId={product._id.toString()} userId={userId}/>
             </div>  
 
             {/* Второй блок (описание) */}

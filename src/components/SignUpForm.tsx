@@ -46,7 +46,7 @@ export default function SignUpForm() {
   
       if (res.ok) {
         setError('');
-        router.push('/');
+        router.push('/signin');
       } else {
         const data = await res.json();
         setError(data.error || 'An unexpected error occurred.');

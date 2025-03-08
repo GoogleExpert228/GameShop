@@ -26,7 +26,7 @@ export default async function Profile() {
 
         // Функция для вычисления общей суммы заказа
         const calculateTotalPrice = (orderItems: OrderItem[]) => {
-            return orderItems.reduce((total, item) => total + item.price * item.qty, 0);
+            return orderItems.reduce((total, item) => total + item.price, 0);
         };
 
         return (
